@@ -47,8 +47,12 @@ public class NormalGame extends AbstractGame {
     protected void generateBoss() {
         bossAppearCount++;
         if (soundEnabled) {
-            // 背景音乐切换由具体的 Activity 或音乐管理器处理，这里暂时留空或调用简化的 MusicThread
-            new MusicThread(getContext(), "src/videos/bgm_boss.wav", true).start();
+            if (bgmThread != null) {
+                bgmThread.stopMusic();
+                bgmThread = null;
+            }
+            bgmThread = new MusicThread(getContext(), "src/videos/bgm_boss.wav", true);
+            bgmThread.start();
         }
         int locationX = Main.screenWidth / 2;
         int locationY = ImageManager.BOSS_ENEMY_IMAGE.getHeight();

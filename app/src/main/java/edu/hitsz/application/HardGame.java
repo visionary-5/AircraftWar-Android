@@ -48,7 +48,12 @@ public class HardGame extends AbstractGame {
     protected void generateBoss() {
         bossAppearCount++;
         if (soundEnabled) {
-             new MusicThread(getContext(), "src/videos/bgm_boss.wav", true).start();
+            if (bgmThread != null) {
+                bgmThread.stopMusic();
+                bgmThread = null;
+            }
+            bgmThread = new MusicThread(getContext(), "src/videos/bgm_boss.wav", true);
+            bgmThread.start();
         }
         int locationX = Main.screenWidth / 2;
         int locationY = ImageManager.BOSS_ENEMY_IMAGE.getHeight();

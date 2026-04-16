@@ -93,6 +93,7 @@ public abstract class AbstractGame extends SurfaceView implements SurfaceHolder.
 
     protected boolean gameOverFlag = false;
     protected boolean soundEnabled = true;
+    protected MusicThread bgmThread = null;
 
     private Thread drawingThread;
     private boolean isRunning = false;
@@ -145,6 +146,10 @@ public abstract class AbstractGame extends SurfaceView implements SurfaceHolder.
         isRunning = true;
         drawingThread = new Thread(this);
         drawingThread.start();
+        if (soundEnabled) {
+            bgmThread = new MusicThread(getContext(), "src/videos/bgm.wav", true);
+            bgmThread.start();
+        }
     }
 
     @Override
@@ -156,6 +161,10 @@ public abstract class AbstractGame extends SurfaceView implements SurfaceHolder.
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
         isRunning = false;
+        if (bgmThread != null) {
+            bgmThread.stopMusic();
+            bgmThread = null;
+        }
     }
 
     @Override
@@ -255,6 +264,13 @@ public abstract class AbstractGame extends SurfaceView implements SurfaceHolder.
     }
 
     protected void gameOver() {
+        if (bgmThread != null) {
+            bgmThread.stopMusic();
+            bgmThread = null;
+        }
+        if (soundEnabled) {
+            new MusicThread(getContext(), "src/videos/game_over.wav").start();
+        }
         // 在游戏线程中将得分存入 SQLite
         String recordTime = new java.text.SimpleDateFormat("MM-dd HH:mm", java.util.Locale.getDefault())
                 .format(new java.util.Date());
@@ -331,6 +347,7 @@ public abstract class AbstractGame extends SurfaceView implements SurfaceHolder.
                 if (enemyAircraft.crash(bullet)) {
                     enemyAircraft.decreaseHp(bullet.getPower());
                     bullet.vanish();
+                    if (soundEnabled) new MusicThread(getContext(), "src/videos/bullet_hit.wav").start();
                     if (enemyAircraft.notValid()) handleEnemyDestroyed(enemyAircraft);
                 }
             }
@@ -350,8 +367,10 @@ public abstract class AbstractGame extends SurfaceView implements SurfaceHolder.
                         if (!enemyBullet.notValid() && enemyBullet instanceof Observer) bombProp.registerObserver((Observer) enemyBullet);
                     }
                     score += bombProp.notifyObservers();
+                    if (soundEnabled) new MusicThread(getContext(), "src/videos/bomb_explosion.wav").start();
                 } else {
                     prop.activate(heroAircraft);
+                    if (soundEnabled) new MusicThread(getContext(), "src/videos/get_supply.wav").start();
                 }
                 prop.vanish();
             }
