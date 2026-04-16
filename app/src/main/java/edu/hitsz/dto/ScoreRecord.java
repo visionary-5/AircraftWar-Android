@@ -6,6 +6,7 @@ package edu.hitsz.dto;
  */
 public class ScoreRecord {
     private int rank;
+    private long rowId = -1;
     private final String playerName;
     private final int score;
     private final String recordTime;
@@ -22,6 +23,14 @@ public class ScoreRecord {
 
     public void setRank(int rank) {
         this.rank = rank;
+    }
+
+    public long getRowId() {
+        return rowId;
+    }
+
+    public void setRowId(long rowId) {
+        this.rowId = rowId;
     }
 
     public String getPlayerName() {

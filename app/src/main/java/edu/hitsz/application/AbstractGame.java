@@ -18,6 +18,9 @@ import androidx.annotation.NonNull;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.content.Intent;
+
+import edu.hitsz.LeaderboardActivity;
 import edu.hitsz.MainActivity;
 import edu.hitsz.aircraft.AbstractAircraft;
 import edu.hitsz.aircraft.BossEnemy;
@@ -31,6 +34,8 @@ import edu.hitsz.aircraft.HeroAircraft;
 import edu.hitsz.aircraft.MobEnemyFactory;
 import edu.hitsz.basic.AbstractFlyingObject;
 import edu.hitsz.bullet.BaseBullet;
+import edu.hitsz.dao.ScoreDaoSQLiteImpl;
+import edu.hitsz.dto.ScoreRecord;
 import edu.hitsz.observer.Observer;
 import edu.hitsz.prop.AbstractProp;
 import edu.hitsz.prop.BloodPropFactory;
@@ -250,13 +255,22 @@ public abstract class AbstractGame extends SurfaceView implements SurfaceHolder.
     }
 
     protected void gameOver() {
+        // 在游戏线程中将得分存入 SQLite
+        String recordTime = new java.text.SimpleDateFormat("MM-dd HH:mm", java.util.Locale.getDefault())
+                .format(new java.util.Date());
+        new ScoreDaoSQLiteImpl(getContext()).insertScore(
+                new ScoreRecord("Player", score, recordTime), difficulty);
+
         // 使用 Handler 在 UI 线程执行跳转逻辑
         new Handler(Looper.getMainLooper()).post(() -> {
-            Toast.makeText(getContext(), "游戏结束！最终得分: " + score, Toast.LENGTH_LONG).show();
-            // 让 MainActivity 恢复初始布局（回到菜单）
+            // 让 MainActivity 恢复菜单布局（在后台）
             if (getContext() instanceof MainActivity) {
                 ((MainActivity) getContext()).returnToMenu();
             }
+            // 跳转到排行榜页面
+            Intent intent = new Intent(getContext(), LeaderboardActivity.class);
+            intent.putExtra(LeaderboardActivity.EXTRA_DIFFICULTY, difficulty);
+            getContext().startActivity(intent);
         });
     }
 

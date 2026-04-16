@@ -12,28 +12,28 @@
         android:text="飞机大战 - 难度选择"
         android:textSize="30sp"
         android:textColor="@android:color/white"
-        android:layout_marginBottom="50dp"/>
+        android:layout_marginBottom="50dp" />
 
     <Button
         android:id="@+id/btn_easy"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="简单模式"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="10dp" />
 
     <Button
         android:id="@+id/btn_normal"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="普通模式"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="10dp" />
 
     <Button
         android:id="@+id/btn_hard"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="困难模式"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="20dp" />
 
     <CheckBox
         android:id="@+id/cb_sound"
@@ -41,6 +41,42 @@
         android:layout_height="wrap_content"
         android:text="开启音效"
         android:textColor="@android:color/white"
-        android:checked="true"/>
+        android:checked="true"
+        android:layout_marginBottom="30dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="查看排行榜"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="10dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_rank_easy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="简单"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/btn_rank_normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="普通"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/btn_rank_hard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="困难" />
+
+    </LinearLayout>
 
 </LinearLayout>
