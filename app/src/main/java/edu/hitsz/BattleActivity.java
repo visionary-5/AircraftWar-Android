@@ -58,7 +58,7 @@ public class BattleActivity extends AppCompatActivity
     }
 
     @Override
-    public void onStart() {
+    public void onBattleStart() {
         if (started) return;
         started = true;
         Toast.makeText(this, "对手已就绪，开始对战！", Toast.LENGTH_SHORT).show();

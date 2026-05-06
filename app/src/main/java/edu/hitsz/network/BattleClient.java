@@ -26,7 +26,7 @@ public class BattleClient {
 
     public interface Listener {
         void onWaiting();
-        void onStart();
+        void onBattleStart();
         void onOpponentScore(int score);
         void onOpponentDead();
         void onBattleEnded(int myFinalScore, int opponentFinalScore);
@@ -90,7 +90,7 @@ public class BattleClient {
         if (line.equals("WAIT")) {
             ui.post(listener::onWaiting);
         } else if (line.equals("START")) {
-            ui.post(listener::onStart);
+            ui.post(listener::onBattleStart);
         } else if (line.startsWith("OPP_SCORE ")) {
             try {
                 int score = Integer.parseInt(line.substring(10).trim());
