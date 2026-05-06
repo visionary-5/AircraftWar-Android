@@ -221,12 +221,24 @@ public abstract class AbstractGame extends SurfaceView implements SurfaceHolder.
         }
     }
 
-    private void paintScoreAndLife(Canvas canvas) {
+    protected void paintScoreAndLife(Canvas canvas) {
         mPaint.setColor(Color.RED);
         mPaint.setTextSize(50);
         mPaint.setFakeBoldText(true);
         canvas.drawText("SCORE:" + this.score, 30, 80, mPaint);
         canvas.drawText("LIFE:" + this.heroAircraft.getHp(), 30, 150, mPaint);
+    }
+
+    protected Paint getPaint() {
+        return mPaint;
+    }
+
+    protected int getScore() {
+        return score;
+    }
+
+    protected boolean isGameOver() {
+        return gameOverFlag || (heroAircraft != null && heroAircraft.getHp() <= 0);
     }
 
     public final void action() {

@@ -1,82 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
     android:background="@android:color/darker_gray">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="飞机大战 - 难度选择"
-        android:textSize="30sp"
-        android:textColor="@android:color/white"
-        android:layout_marginBottom="50dp" />
-
-    <Button
-        android:id="@+id/btn_easy"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:text="简单模式"
-        android:layout_marginBottom="10dp" />
-
-    <Button
-        android:id="@+id/btn_normal"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:text="普通模式"
-        android:layout_marginBottom="10dp" />
-
-    <Button
-        android:id="@+id/btn_hard"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:text="困难模式"
-        android:layout_marginBottom="20dp" />
-
-    <CheckBox
-        android:id="@+id/cb_sound"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="开启音效"
-        android:textColor="@android:color/white"
-        android:checked="true"
-        android:layout_marginBottom="30dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="查看排行榜"
-        android:textSize="16sp"
-        android:textColor="@android:color/white"
-        android:layout_marginBottom="10dp" />
-
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp">
 
-        <Button
-            android:id="@+id/btn_rank_easy"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="简单"
-            android:layout_marginEnd="8dp" />
+            android:text="飞机大战 - 难度选择"
+            android:textSize="30sp"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="24dp" />
 
         <Button
-            android:id="@+id/btn_rank_normal"
-            android:layout_width="wrap_content"
+            android:id="@+id/btn_easy"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:text="普通"
-            android:layout_marginEnd="8dp" />
+            android:text="简单模式"
+            android:layout_marginBottom="10dp" />
 
         <Button
-            android:id="@+id/btn_rank_hard"
+            android:id="@+id/btn_normal"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="普通模式"
+            android:layout_marginBottom="10dp" />
+
+        <Button
+            android:id="@+id/btn_hard"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="困难模式"
+            android:layout_marginBottom="14dp" />
+
+        <Button
+            android:id="@+id/btn_battle"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="联机对战"
+            android:layout_marginBottom="14dp" />
+
+        <CheckBox
+            android:id="@+id/cb_sound"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="困难" />
+            android:text="开启音效"
+            android:textColor="@android:color/white"
+            android:checked="true"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="查看排行榜"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_rank_easy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="简单"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btn_rank_normal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="普通"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btn_rank_hard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="困难"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btn_rank_battle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="对战" />
+
+        </LinearLayout>
 
     </LinearLayout>
-
-</LinearLayout>
+</ScrollView>
