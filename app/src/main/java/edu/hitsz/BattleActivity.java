@@ -30,6 +30,7 @@ public class BattleActivity extends AppCompatActivity
     private boolean soundEnabled;
     private boolean started = false;
     private boolean resultShown = false;
+    private AlertDialog waitingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,9 +104,27 @@ public class BattleActivity extends AppCompatActivity
     }
 
     @Override
+    public void onSelfDead(int myScore, int opponentScoreSoFar) {
+        if (resultShown) return;
+        if (waitingDialog != null && waitingDialog.isShowing()) return;
+        waitingDialog = new AlertDialog.Builder(this)
+                .setTitle("你已阵亡")
+                .setMessage("我方得分：" + myScore + "\n对手得分：" + opponentScoreSoFar
+                        + "\n\n等待对手阵亡…")
+                .setCancelable(false)
+                .setNegativeButton("放弃对战", (d, w) -> finish())
+                .create();
+        waitingDialog.show();
+    }
+
+    @Override
     public void onBothDead(int myScore, int opponentScore) {
         if (resultShown) return;
         resultShown = true;
+        if (waitingDialog != null) {
+            waitingDialog.dismiss();
+            waitingDialog = null;
+        }
         // 把本局得分写入排行榜
         String time = new java.text.SimpleDateFormat("MM-dd HH:mm", java.util.Locale.getDefault())
                 .format(new java.util.Date());

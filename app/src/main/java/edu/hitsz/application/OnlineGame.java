@@ -18,6 +18,7 @@ import edu.hitsz.network.BattleClient;
 public class OnlineGame extends NormalGame {
 
     public interface BattleHook {
+        void onSelfDead(int myScore, int opponentScoreSoFar);
         void onBothDead(int myScore, int opponentScore);
         void onOpponentLeft();
     }
@@ -100,14 +101,10 @@ public class OnlineGame extends NormalGame {
             deadSent = true;
             client.sendDead();
         }
-        if (!opponentDead && battleHook != null) {
-            new Handler(Looper.getMainLooper()).post(() -> {
-                if (getContext() instanceof android.app.Activity) {
-                    android.widget.Toast.makeText(getContext(),
-                            "你已阵亡，等待对手结束对战…",
-                            android.widget.Toast.LENGTH_LONG).show();
-                }
-            });
+        if (battleHook != null) {
+            final int my = getScore();
+            final int opp = opponentScore;
+            new Handler(Looper.getMainLooper()).post(() -> battleHook.onSelfDead(my, opp));
         }
     }
 }
