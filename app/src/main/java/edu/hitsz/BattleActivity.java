@@ -56,12 +56,22 @@ public class BattleActivity extends AppCompatActivity
     @Override
     public void onWaiting() {
         Toast.makeText(this, "已连接，等待对手加入…", Toast.LENGTH_SHORT).show();
+        if (waitingDialog == null || !waitingDialog.isShowing()) {
+            waitingDialog = new AlertDialog.Builder(this)
+                    .setTitle("等待对手加入")
+                    .setMessage("已连接服务器，正在等待第二个玩家进入同一端口。")
+                    .setCancelable(false)
+                    .setNegativeButton("取消", (d, w) -> finish())
+                    .create();
+            waitingDialog.show();
+        }
     }
 
     @Override
     public void onBattleStart() {
         if (started) return;
         started = true;
+        dismissWaitingDialog();
         Toast.makeText(this, "对手已就绪，开始对战！", Toast.LENGTH_SHORT).show();
         HeroAircraft.resetInstance();
         game = new OnlineGame(this, DIFFICULTY, soundEnabled, client);
@@ -94,6 +104,7 @@ public class BattleActivity extends AppCompatActivity
     @Override
     public void onError(String message) {
         runOnUiThread(() -> {
+            dismissWaitingDialog();
             new AlertDialog.Builder(this)
                     .setTitle("连接失败")
                     .setMessage(message)
@@ -121,10 +132,7 @@ public class BattleActivity extends AppCompatActivity
     public void onBothDead(int myScore, int opponentScore) {
         if (resultShown) return;
         resultShown = true;
-        if (waitingDialog != null) {
-            waitingDialog.dismiss();
-            waitingDialog = null;
-        }
+        dismissWaitingDialog();
         // 把本局得分写入排行榜
         String time = new java.text.SimpleDateFormat("MM-dd HH:mm", java.util.Locale.getDefault())
                 .format(new java.util.Date());
@@ -153,12 +161,20 @@ public class BattleActivity extends AppCompatActivity
     private void showOpponentLeftDialog() {
         if (resultShown) return;
         resultShown = true;
+        dismissWaitingDialog();
         new AlertDialog.Builder(this)
                 .setTitle("对手已离线")
                 .setMessage("对手退出了对战。")
                 .setCancelable(false)
                 .setPositiveButton("返回", (d, w) -> finish())
                 .show();
+    }
+
+    private void dismissWaitingDialog() {
+        if (waitingDialog != null) {
+            waitingDialog.dismiss();
+            waitingDialog = null;
+        }
     }
 
     @Override

@@ -47,6 +47,9 @@ public class BattleClient {
     private Thread receiver;
     private final ExecutorService sendExecutor = Executors.newSingleThreadExecutor();
     private volatile boolean running = false;
+    private volatile boolean userDisconnected = false;
+    private volatile boolean battleStarted = false;
+    private volatile boolean battleEnded = false;
 
     public BattleClient(String host, int port, Listener listener) {
         this.host = host;
@@ -55,6 +58,7 @@ public class BattleClient {
     }
 
     public void connect() {
+        userDisconnected = false;
         new Thread(() -> {
             try {
                 socket = new Socket();
@@ -81,7 +85,15 @@ public class BattleClient {
         } catch (IOException ex) {
             if (running) Log.w(TAG, "receive loop terminated: " + ex.getMessage());
         } finally {
+            boolean unexpectedClose = running && !userDisconnected;
             running = false;
+            if (unexpectedClose && !battleEnded) {
+                if (battleStarted) {
+                    ui.post(listener::onOpponentLeft);
+                } else {
+                    postError("与服务器连接已断开，请确认服务端仍在运行。");
+                }
+            }
         }
     }
 
@@ -90,6 +102,7 @@ public class BattleClient {
         if (line.equals("WAIT")) {
             ui.post(listener::onWaiting);
         } else if (line.equals("START")) {
+            battleStarted = true;
             ui.post(listener::onBattleStart);
         } else if (line.startsWith("OPP_SCORE ")) {
             try {
@@ -104,6 +117,7 @@ public class BattleClient {
                 try {
                     int my = Integer.parseInt(parts[1]);
                     int opp = Integer.parseInt(parts[2]);
+                    battleEnded = true;
                     ui.post(() -> listener.onBattleEnded(my, opp));
                 } catch (NumberFormatException ignored) {}
             }
@@ -128,6 +142,7 @@ public class BattleClient {
     }
 
     public void disconnect() {
+        userDisconnected = true;
         running = false;
         sendExecutor.shutdownNow();
         try { if (in != null) in.close(); } catch (IOException ignored) {}

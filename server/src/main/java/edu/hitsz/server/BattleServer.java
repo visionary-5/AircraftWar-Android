@@ -82,6 +82,7 @@ public class BattleServer {
         final ClientSession b;
         boolean aDead = false;
         boolean bDead = false;
+        boolean ended = false;
         int aScore = 0;
         int bScore = 0;
 
@@ -96,22 +97,29 @@ public class BattleServer {
         }
 
         synchronized void onScore(ClientSession self, int score) {
+            if (ended) return;
             if (self == a) aScore = score; else bScore = score;
             ClientSession opp = opponentOf(self);
             opp.send("OPP_SCORE " + score);
         }
 
         synchronized void onDead(ClientSession self) {
+            if (ended) return;
             if (self == a) aDead = true; else bDead = true;
             ClientSession opp = opponentOf(self);
             opp.send("OPP_DEAD");
             if (aDead && bDead) {
+                ended = true;
                 a.send("END " + aScore + " " + bScore);
                 b.send("END " + bScore + " " + aScore);
+                a.close(false);
+                b.close(false);
+                System.out.println("[BattleServer] room#" + id + " ended");
             }
         }
 
         synchronized void onLeft(ClientSession self) {
+            if (ended) return;
             ClientSession opp = opponentOf(self);
             if (opp != null) opp.send("OPP_LEFT");
         }
@@ -155,7 +163,7 @@ public class BattleServer {
             } catch (IOException ex) {
                 // client disconnected
             } finally {
-                close();
+                close(true);
             }
         }
 
@@ -172,14 +180,14 @@ public class BattleServer {
             }
         }
 
-        void close() {
+        void close(boolean notifyOpponent) {
             if (closed) return;
             closed = true;
             try { if (in != null) in.close(); } catch (IOException ignored) {}
             if (out != null) out.close();
             try { socket.close(); } catch (IOException ignored) {}
             waiting.remove(this);
-            if (room != null) room.onLeft(this);
+            if (notifyOpponent && room != null) room.onLeft(this);
             System.out.println("[BattleServer] session closed: " + socket.getRemoteSocketAddress());
         }
     }
